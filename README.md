@@ -1,2 +1,3 @@
-# telegram_bot
-My personal telegram bot
+# Асинхронный Telegram бот на языке Python 3 с использованием библиотеки aiogram
+---
+Самый простой Эхо-бот.
