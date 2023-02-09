@@ -1,14 +1,30 @@
-import asyncio
+# Подключен к OpenAI к Chat
+import openai
+from aiogram import Bot, types
+from aiogram.dispatcher import Dispatcher
+from aiogram.utils import executor
+from config import TOKEN
+from config import API_KEY
 
-from aiogram import Bot, Dispatcher, executor
-from config import BOT_TOKEN
+openai.api_key = API_KEY
 
-# loop = asyncio.get_event_loop()
-# Поток нам не нужен, т.к. он и так создается в диспатчере.
-bot = Bot(BOT_TOKEN, parse_mode="HTML")
+bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
-if __name__ == '__main__':
-    from handlers import dp, send_to_admin
 
-    executor.start_polling(dp, on_startup=send_to_admin)
+@dp.message_handler()
+async def send(message: types.Message):
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=message.text,
+        temperature=0.9,
+        max_tokens=1000,
+        top_p=1.0,
+        frequency_penalty=0.0,
+        presence_penalty=0.6,
+        stop=["AI:"],
+    )
+    await message.answer(response["choices"][0]["text"])
+
+
+executor.start_polling(dp, skip_updates=True)
