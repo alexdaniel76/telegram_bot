@@ -31,4 +31,8 @@ To run this code, simply run the following command in the terminal:
 
 `python main.py`
 
-Replace `main` with the name of the file containing this code. The chatbot will start and will be available for use.
+The chatbot will start and will be available for use.
+
+## License
+
+This project is licensed under the MIT License.
