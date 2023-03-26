@@ -1,39 +1,27 @@
-name: Run Python script
+name: OpenAI Chat
 
 on: [push]
 
 jobs:
-  run:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: "3.9"
 
       - name: Install dependencies
-        run: pip install aiogram openai
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Run script
-        uses: actions/github-script@v4
-        with:
-          script: |
-            import openai
-            from aiogram import Bot, types
-            from aiogram.dispatcher import Dispatcher
-            from aiogram.utils import executor
-
-            from config import API_KEY, TOKEN
-
-            openai.api_key = API_KEY
-
-            bot = Bot(token=TOKEN)
-            dp = Dispatcher(bot)
-
-            # ... the rest of your Python code goes here ...
-
-            executor.start_polling(dp, skip_updates=True)
+      - name: Run OpenAI Chat
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          python openai_chat.py
